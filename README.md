@@ -1,71 +1,187 @@
-# codepet README
+# **[프로젝트 명세서] CodePet: Dev-Buddy**
 
-This is the README for your extension "codepet". After writing up a brief description, we recommend including the following sections.
+## **1. 프로젝트 개요**
 
-## Features
+• **목적:** 개발자의 코딩 습관(시간, 양, 품질)을 데이터화하여 가상의 펫을 성장시키는 VS Code 확장 프로그램.
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+• **핵심 타겟:** 코딩 과정에서 성취감을 얻고 싶은 개발자, 데스크테리어와 디지털 가젯을 좋아하는 사용자.
 
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+• **주요 기술 스택:** TypeScript, VS Code Extension API, HTML/CSS/JS (Webview), Node.js, esbuild
 
 ---
 
-## Following extension guidelines
+## **2. 주요 기능 (Functional Requirements)**
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+### **A. 펫 시각화 (Webview UI)**
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+• **이미지 렌더링:** 사용자가 준비한 외부 GIF/PNG 이미지를 VS Code 사이드바 혹은 하단 패널에 표시.
 
-## Working with Markdown
+• **상태별 애니메이션:** * `Idle`: 코딩 중이 아닐 때 (숨쉬기, 잠자기)
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+    ◦ `Coding`: 타이핑 중일 때 (열심히 작업하는 모션)
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+    ◦ `Level-Up`: 특정 경험치 도달 시 (진화 혹은 축하 모션)
 
-## For more information
+• **상태창:** 현재 레벨, 경험치 바(XP Bar), 현재 스탯 표시.
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+### **B. 데이터 트래킹 및 경험치(XP) 로직**
 
-**Enjoy!**
+1. **작성 시간 (Active Time):** VS Code 창이 활성화되어 있고 편집이 일어나는 시간을 측정. (5분당 10 XP)
+
+2. **코딩 양 (LOC/Char):** 입력된 글자 수 또는 라인 수를 기반으로 산출. (100자당 5 XP)
+
+3. **커밋 활동 (Git Integration):** `git commit` 발생 시 보너스 경험치 부여. (커밋 1회당 50 XP)
+
+4. **구조 정교함 (Optional):** 파일의 복잡도나 함수 분리 등을 간단히 체크하여 '지능' 스탯 부여.
+
+### **C. 데이터 저장 및 관리**
+
+• 사용자의 펫 이름, 레벨, 누적 경험치 데이터를 `globalState`에 영구 저장.
+
+• 사용자가 자신의 외부 이미지 경로를 설정에서 변경할 수 있는 기능.
+
+---
+
+### **3. 사용자 시나리오**
+
+1. 사용자가 VS Code 마켓플레이스에서 확장 프로그램을 설치한다.
+
+2. 사이드바 아이콘을 클릭하여 CodePet 패널을 연다.
+
+3. 사용자가 코딩을 시작하면 펫이 'Coding' 애니메이션으로 바뀌며 실시간으로 경험치가 쌓인다.
+
+4. 경험치가 가득 차면 펫이 진화하며 새로운 GIF 이미지로 교체된다.
+
+### **4. 초기 개발 로드맵 (Milestones)**
+
+• **1단계:** VS Code Hello World 확장 프로그램 생성 및 사이드바 Webview에 이미지 띄우기.
+
+• **2단계:** `onDidChangeTextDocument`를 이용해 타이핑 감지 및 콘솔에 경험치 로그 찍기.
+
+• **3단계:** 경험치 데이터를 로컬에 저장하고 레벨업 로직 구현하기.
+
+• **4단계:** 상태(Idle/Coding)에 따라 GIF 이미지가 교체되는 UI 연동.
+
+---
+
+## CodePet 개발 로드맵
+
+### 현재 진행 상황 요약(26.02.21)
+
+| 영역 | 상태 | 비고 |
+| --- | --- | --- |
+| 프로젝트 구조 / 빌드 | ✅ 완료 | esbuild, TypeScript, ESLint 설정 완료 |
+| Webview 기본 UI | ⚠️ 부분 | HTML/CSS 구조 있으나 GIF 이미지 누락 |
+| 문자 입력 기반 XP | ✅ 완료 | 100자당 5 XP |
+| 상태 전환 (Idle/Coding/Level-Up) | ✅ 완료 | 30초 타임아웃으로 Idle 전환 |
+| globalState 저장 | ✅ 완료 | totalXP, pendingChars 영구 저장 |
+| 활성 시간 기반 XP | ❌ 미구현 | 명세: 5분당 10 XP |
+| Git 커밋 보너스 | ❌ 미구현 | 명세: 커밋 1회당 50 XP |
+| 펫 진화 시스템 | ❌ 미구현 | 레벨별 이미지 변경 없음 |
+| 펫 이름 / 설정 UI | ❌ 미구현 |  |
+| 이미지 커스터마이징 | ❌ 미구현 |  |
+| activationEvents | ❌ 누락 | 확장이 자동 활성화 안 됨 |
+
+---
+
+### Phase 1: 긴급 수정 (Critical Fixes)
+
+> 현재 확장이 정상 동작하지 않는 문제 해결
+> 
+
+| # | 작업 | 파일 | 설명 |
+| --- | --- | --- | --- |
+| 1-1 | activationEvents 설정 | package.json | `"onView:codepet.view"` 추가하여 사이드바 열 때 자동 활성화 |
+| 1-2 | 누락 이미지 대응 | src/extension.ts | `pet-idle.gif` / `pet-coding.gif` 미존재 시 `pet.png` 폴백 처리 |
+| 1-3 | 기본 이미지 에셋 준비 | media/ | 최소한 idle/coding 상태용 이미지 2장 준비 (PNG 또는 GIF) |
+
+---
+
+### Phase 2: 핵심 XP 시스템 완성
+
+> 명세서에 정의된 3가지 XP 획득 경로 완성
+> 
+
+| # | 작업 | 설명 |
+| --- | --- | --- |
+| 2-1 | **활성 시간 트래킹** | 에디터 활성 + 편집 발생 시간 측정, 5분당 10 XP 부여 |
+| 2-2 | **Git 커밋 감지** | `git.commit` 커맨드 실행 감지 → 커밋 1회당 50 XP 보너스 |
+| 2-3 | **XP 밸런스 조정** | 레벨업 공식 재검토 (현재 100 XP/레벨 → 레벨별 점진적 증가 고려) |
+
+---
+
+### Phase 3: 펫 진화 시스템
+
+### 레벨에 따른 펫 시각 변화 구현
+
+| # | 작업 | 설명 |
+| --- | --- | --- |
+| 3-1 | **레벨 구간별 이미지 매핑** | 레벨 1-5, 6-10, 11+ 등 구간별 다른 이미지 표시 |
+| 3-2 | **Level-Up 연출** | 레벨업 시 축하 애니메이션/이펙트 (CSS 애니메이션 강화) |
+| 3-3 | **진화 알림** | 특정 레벨 도달 시 VS Code 알림 메시지 표시 |
+
+---
+
+### Phase 4: 설정 및 커스터마이징
+
+> 사용자 개인화 기능 추가
+> 
+
+| # | 작업 | 파일 | 설명 |
+| --- | --- | --- | --- |
+| 4-1 | **펫 이름 설정** | package.json + extension.ts | `configuration` 기여를 통해 펫 이름 설정 항목 추가 |
+| 4-2 | **커스텀 이미지 경로** | package.json + extension.ts | 사용자가 자신만의 GIF/PNG 경로를 지정할 수 있도록 설정 |
+| 4-3 | **Webview에 펫 이름 표시** | extension.ts (Webview HTML) | 설정된 이름을 상태창에 반영 |
+
+---
+
+### Phase 5: UI/UX 개선
+
+> Webview 시각적 완성도 향상
+> 
+
+| # | 작업 | 설명 |
+| --- | --- | --- |
+| 5-1 | **상태창 리디자인** | 레벨, XP바, 스탯을 보기 좋게 재배치 |
+| 5-2 | **다크/라이트 테마 대응** | VS Code 테마 변수(`--vscode-*`) 활용하여 테마 호환 |
+| 5-3 | **반응형 레이아웃** | 사이드바 크기 변경에 따른 UI 적응 |
+| 5-4 | **상태 전환 트랜지션** | Idle↔Coding 전환 시 부드러운 CSS 전환 효과 |
+
+---
+
+### Phase 6: 고급 기능 (Optional)
+
+> 명세서의 선택적 요구사항 및 확장 기능
+> 
+
+| # | 작업 | 설명 |
+| --- | --- | --- |
+| 6-1 | **구조 정교함 (지능 스탯)** | 함수 분리도, 파일 복잡도 간단 분석 → 지능 스탯 부여 |
+| 6-2 | **통계 대시보드** | 일간/주간 코딩 활동 요약 차트 |
+| 6-3 | **도전 과제 시스템** | 특정 조건 달성 시 뱃지/업적 부여 |
+
+---
+
+### Phase 7: 배포 준비
+
+> 마켓플레이스 출시를 위한 마무리
+> 
+
+| # | 작업 | 설명 |
+| --- | --- | --- |
+| 7-1 | **README 작성** | 스크린샷 포함한 마켓플레이스용 문서 |
+| 7-2 | **아이콘/배너 디자인** | 마켓플레이스 표시용 고해상도 아이콘 |
+| 7-3 | **테스트 보강** | 핵심 로직(XP 계산, 레벨업, 상태 전환) 단위 테스트 |
+| 7-4 | **VSIX 패키징 및 퍼블리시** | `vsce package` → 마켓플레이스 배포 |
+
+---
+
+## 우선순위 요약
+
+`[긴급]  Phase 1 → 확장이 정상 실행되도록 수정
+[높음]  Phase 2 → 핵심 게임 루프(XP 시스템) 완성
+[높음]  Phase 3 → 펫 성장의 시각적 보상
+[중간]  Phase 4 → 사용자 개인화
+[중간]  Phase 5 → UI 품질 향상
+[낮음]  Phase 6 → 부가 기능
+[최종]  Phase 7 → 출시 준비`
